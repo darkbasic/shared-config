@@ -59,7 +59,7 @@ jobs:
         run: git fetch origin ${{ github.base_ref }}
 
       - name: Setup env
-        uses: the-guild-org/shared-config/setup@main
+        uses: darkbasic/shared-config/setup@main
         with:
           nodeVersion: ${{inputs.nodeVersion}}
           packageManager: ${{inputs.packageManager}}

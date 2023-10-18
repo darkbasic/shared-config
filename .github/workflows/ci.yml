@@ -26,7 +26,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
-      - uses: the-guild-org/shared-config/setup@main
+      - uses: darkbasic/shared-config/setup@main
         name: setup env
         with:
           nodeVersion: ${{inputs.nodeVersion}}

@@ -64,7 +64,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup env
-        uses: the-guild-org/shared-config/setup@main
+        uses: darkbasic/shared-config/setup@main
         with:
           nodeVersion: ${{inputs.nodeVersion}}
           packageManager: ${{inputs.packageManager}}
