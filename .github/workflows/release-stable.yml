@@ -61,10 +61,11 @@ jobs:
 
       - name: release / pull_request
         id: changesets
-        uses: dotansimha/changesets-action@v1.5.2
+        uses: darkbasic/changesets-action@main
         with:
           publish: '${{inputs.packageManager}} ${{ inputs.releaseScript }}'
           version: '${{inputs.packageManager}} changeset version'
+          packageManager: ${{inputs.packageManager}}
           commit: 'chore(release): update monorepo packages versions'
           title: ${{inputs.releasePrName}}
           createGithubReleases: ${{ inputs.createGithubReleases }}
