@@ -43,6 +43,11 @@ runs:
         version: ${{ steps.pnpm.outputs.version }}
         run_install: false
 
+    - name: Corepack
+      shell: bash
+      run: corepack enable
+      if: inputs.packageManager == 'yarn'
+
     - name: setup node
       uses: actions/setup-node@v4
       with:
@@ -56,9 +61,7 @@ runs:
     - name: yarn install
       shell: bash
       if: inputs.packageManager == 'yarn'
-      run: |
-        corepack enable
-        yarn install --frozen-lockfile --immutable
+      run: yarn install --frozen-lockfile --immutable
       working-directory: ${{ inputs.workingDirectory }}
 
     - name: pnpm install
