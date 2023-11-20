@@ -18,20 +18,33 @@ on:
         required: false
         type: number
         default: 18
+      appId:
+        type: string
+        required: false
     secrets:
       githubToken:
-        required: true
+        required: false
+      privateKey:
+        required: false
 
 jobs:
   changeset:
     runs-on: ubuntu-22.04
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
+      - name: Generate a token
+        if: ${{ inputs.appId }}
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ inputs.appId }}
+          private-key: ${{ secrets.privateKey }}
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.githubToken }}
+          token: ${{ steps.app-token.outputs.token || secrets.githubToken }}
 
       - uses: darkbasic/shared-config/setup@main
         name: setup env and install dependencies
@@ -45,4 +58,4 @@ jobs:
         with:
           preCommit: ${{ inputs.preCommit }}
         env:
-          GITHUB_TOKEN: ${{ secrets.githubToken }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token || secrets.githubToken }}

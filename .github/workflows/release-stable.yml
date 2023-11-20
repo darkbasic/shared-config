@@ -27,9 +27,14 @@ on:
         required: false
         type: string
         default: Upcoming Release Changes
+      appId:
+        type: string
+        required: false
     secrets:
       githubToken:
-        required: true
+        required: false
+      privateKey:
+        required: false
       npmToken:
         required: true
 
@@ -40,11 +45,19 @@ jobs:
       published: ${{ steps.changesets.outputs.published }}
       publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
     steps:
+      - name: Generate a token
+        if: ${{ inputs.appId }}
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ inputs.appId }}
+          private-key: ${{ secrets.privateKey }}
+
       - name: checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.githubToken }}
+          token: ${{ steps.app-token.outputs.token || secrets.githubToken }}
 
       - uses: darkbasic/shared-config/setup@main
         name: setup env
@@ -72,4 +85,4 @@ jobs:
           githubReleaseName: ${{ inputs.githubReleaseName || steps.vars.outputs.date }}
         env:
           NPM_TOKEN: ${{ secrets.npmToken }}
-          GITHUB_TOKEN: ${{ secrets.githubToken }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token || secrets.githubToken }}
